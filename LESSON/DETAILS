@@ -1,0 +1,724 @@
+Ember lesson
+
+# check out this link for Example GitHub Repo for Super-Rentals https://github.com/epicodus-lessons/super-rentals-with-reviews/tree/55c7bc9dc8f52a004e02b4556d1b727322eec6b4
+
+# check out: http://emberjs.com/api/classes/Ember.Route.html Ember.Route Class  - index ..methods, properties, events
+
+# Ember implements the idea of "convention over configuration" in its design.
+  - It relies on consistent naming convention to match corresponding portions of the application.
+  - means that the proper naming conventions r in place (the route & template both share the name of that route, we don't need to manually configure the route handler to load the corresponding template; it does so automatically)
+
+# Ember Build all the support structures.
+- ember --help (command-name)
+
+- Ember CLI uses ECMAScript 6 (or ES6 for short) modules to organize application code.
+
+# Terminology
+
+## Anatomy of an Ember application:
+1. **App**:
+- This is where folders and files for models, components, routes, templates and styles are stored.
+
+2. **Bower-Components/ bower.json: bower**:
+- is a dependency management tool. It is used to manage front-end plugins and component dependencies (HTML, CSS, JavaScript, etc).
+- All bower components are installed in the bower-components directory.
+- If we open bower.json, we see the list of dependencies that are installed by Ember automatically. These include Ember, jQuery, Ember Data and QUnit (for testing).
+- _If we add additional front-end dependencies, like **bootstrap**, they will also be listed here and their files added to the **bower-components** directory._
+
+3. **Config:**
+- Contains the environment.js file which lists environmental settings and configurations for our app.
+
+4. **Dist:**
+- When an app is built for deployment, the output files will reside here.
+
+5. **node_modules/ package.json:**
+- This directory and file are from npm (is the package manager for Node.js).
+- Ember is built with Node and uses a variety of Node.js modules for operation.
+- The package.json file comes pre-loaded with a list of current packages Ember requires.
+- Any Ember-CLI add-ons you install will also show up here.
+- Packages listed in package.json are installed in the node_modules directory.
+
+6. **public:**
+- This directory contains assets such as images and fonts.
+
+7. **vendor:**
+- This directory is where any front-end dependencies NOT managed by bower reside.
+
+8. **tests / testem.json:**
+- Contains automated tests for our app. Ember CLI's test runner testem is also configured in testem.json.
+
+9. **tmp:** Temporary files live here.
+
+10. **ember-cli-build.js:** - Behind the scenes, Ember CLI uses a tool called Broccoli to compile our code. This file contains settings for how Broccoli should build our app.
+
+## at app/router.js
+
+- Ember CLI uses ECMAScript 6 (or ES6 for short) modules to organize application code.
+- import Ember from 'ember'; gives us access to the actual Ember.js library as the variable Ember.
+- import config from './config/environment'; line provides access to our app's configuration data as the variable config.
+- const Router = Ember.Router.... defines a constant called Router. (A constant is essentially a variable whose value cannot be re-assigned).
+- export default Router; makes this Router constant available to other parts of the application, similar to the fashion we've exported modules in Angular2.
+
+## Making a Route
+
+```
+$ ember g route [name-of-route]
+```
+Generator creates three new files:
+
+route handler ( app/routes/name-of-route.js )
+one for the template the route handler will render ( app/templates/name-of-route.hbs )
+a test file ( tests/unit/routes/name-of-route-test.js ) 4… the router file is also touched ( app/router.js )
+Index route is special: doesn’t require an entry in the router’s mapping:
+
+```
+$ember g route index
+```
+{{link-to}} Helper
+To create a link:
+
+{{#link-to ‘index’}}Home{{/link-to}}
+### Once loaded, the route handler has two primary responsibilities:
+
+1. It renders a template.
+2. It loads model information that is made available to that template.
+
+### {{name}} is a property provided by the template's context.
+- double curly braces {{}} also known as Handlebars
+- also can contain helpers and components
+- Essentially, they're a manner of inserting and displaying dynamic data in a template.
+
+### Models represent persistent state.
+- A model typically persists information to a web server, although models can be configured to save to anywhere else, such as the browser's Local Storage.
+
+### *Templates* control how a user interface looks, *Components* control how the user interface behaves.
+
+### Components consist of two files:
+1. A template written in Handlebars; ends in the Handlebars .hbs extension
+  - The template defines what the component should look like
+2. A source file written in JavaScript; end in .js extension.
+  - the source file controls what functionality that component has. Components are called from within templates, or within the .hbs portion of another component.
+
+## Start by creating: About page (1st static page).
+- When the URL path /about is loaded, the router will map the URL to the _route handler_ of the same name, about.js The route handler will then load the corresponding _about.hbs Template._
+- 3 new files are created:
+  1. route handler, located at _app/routes/about.js_
+  2. _app/templates/about.hbs_ will render the template the route handler.
+  3. A test file
+- Existing router is also amended to include this new route
+
+### Once routing is created, We can begin to code the template _about.hbs_.
+- remove this _{{outlet}} tag_, and instead add some HTML _describing our site_.
+- $ ember serve, & visit local host:4200/about
+
+APP/ROUTER.JS
+```
+import Ember from 'ember';
+  //Give access to the actual Ember.js library as the variable Ember.
+
+import config from './config/environment';
+  //give access to our app's configuration data as the variable config.
+
+const Router = Ember.Router.extend({
+  location: config.locationType,
+  rootURL: config.rootURL
+});
+
+Router.map(function() {
+  this.route('about');
+});
+
+export default Router;
+  //= makes this Router constant available to other parts of the app, similar to the fashion we've exportedmodules in Angular2
+
+  //at const Router - defines a constant called Router.(***A constant is essentially a variable whose value can't be re-assigned!!**)
+```
+
+# ROUTING OVERVIEW
+
+1. URL IS SET TO _'localhost:4200/about'_
+2. Then @ ROUTER.JS: Router maps URL to corresponding about route entry. Loads about route handler
+
+```
+At router.js
+-----------------------
+Router.map(function() {
+  this.route('about');
+});
+export default Router;
+```
+3. About Route loads corresponding about template.
+
+```
+At routes/about.js
+------------------------
+import Ember from 'ember';
+export default Ember.Route.extend({
+
+});
+```
+4. About Template is rendered in browser.
+
+```
+At templates/about.js
+------------------------
+<h2>About (title name)</h2>
+<p> The website is ....
+```
+
+## Create Contact Route : another static page w/contact information.
+
+- **Remember** Each time we create a new Rote, a route handler & template are both generated.
+
+1. start by generating route handler, & a template w/
+  $ ember g route contact
+2. This will created
+    - contact entry in our router
+    - a corresponding route handler in _app/routes/contact.js_
+    - a contact template
+3. This also not require anything additional to load b/c convention over configuration.
+
+4. _app/templates/contact.hbs_ we'll add details for getting in touch w/ the fictitious Super Rentals Company: show contact info. **remember to remove {{outlet}} tag**
+
+### Router Overview
+- URL IS SET TO _'localhost:4200/about'_
+- Then @ ROUTER.JS: Router maps URL to corresponding about route entry. Loads about route handler
+```
+At router.js
+-----------------------
+Router.map(function() {
+  this.route('about');
+  this.route('Contact');
+});
+export default Router;
+
+- About Route loads corresponding about template.
+
+At Contact Route: routes/contact.js
+------------------------------------
+import Ember from 'ember';
+export default Ember.Route.extend({
+});
+
+- About Template is rendered in browser.
+
+At templates/contact.hbs
+------------------------
+<h2>Website name </h2>
+<p> website contact info ....
+
+** add navigational link at the bottom of each .hbs page
+{{#link-to 'contact'}}Click here to contact us.{{/link-to}}
+
+
+About route also happen parallel together w/the contact:   
+
+At routes/about.js
+------------------------
+import Ember from 'ember';
+export default Ember.Route.extend({
+
+});
+At templates/about.hbs
+------------------------
+<h2>About (title name)</h2>
+<p> The website is ....
+
+{{#link-to 'about'}}About{{/link-to}}
+```
+
+### Ember has built-in helpers that provide basic functionality, such as linking between routes. These helpers are also sandwiched between Handlebars {{}} brackets. _{{#link-to 'about'}}About{{/link-to}}_ or _{{#link-to 'contact'}}Click here to contact us.{{/link-to}}_
+- notice **The helper takes 1 argument: The name of the route this link should take the user to.**
+
+## Create Index Route: This doesn't need entry in the route unlike the first 2 routes we created.
+
+1. $ ember g route index
+    - created _app/templates/index.hbs_
+2. _Generating this route didn't alter_ app/router.js at all
+
+3. _app/templates/index.hbs_  add update the template & links for the other 2 routes:
+    - {{#link-to 'about'}}About{{/link-to}}
+    - {{#link-to 'contact'}}Click here to contact us.{{/link-to}}
+4. since app/index.html already has index.html come w/html template
+
+# Model: the user can add, update, & delete.
+
+### We require a _MODEL_ which will save information about each rental. This will begin w/ a simple hard-coded array of JS objects
+  - Later on we'll implement something called Ember Data and allow users to create and modify their own rentals. We'll also save this information in a database.
+
+# Terminology:
+
+## Hook: In the Ember.js framework, this refers to _a method within an Ember class._
+
+## Model Hook: A method added to a route handler responsible for returning model data to that route, and its corresponding template. A model hook looks something like this:
+
+```
+(below is a model hook)
+  model() {
+    return rentals;
+  },
+```
+
+## Tips
+- If you haven't used the ES6 shorthand method definition syntax before, model() is the same as writing model: function()
+
+- To iterate through an array, we can use the {{each}} helper, like this:
+
+```
+{{#each model as |rental|}}
+    <li>{{rental.owner}}</li>
+{{/each}}
+```
+# Model
+
+### Model Data: app/routes/index.js & add some hard-coded data to act as our model:
+
+```
+app/routes/index.js
+------------------------------
+import Ember from 'ember';
+
+var rentals = [{
+  id: 1,
+  owner: "Veruca Salt",
+  city: "San Francisco",
+  type: "Estate",
+  bedrooms: 15,
+  image: "https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg"
+}, {
+  id: 2,
+  owner: "Mike TV",
+  city: "Seattle",
+  type: "Condo",
+  bedrooms: 1,
+  image: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Alfonso_13_Highrise_Tegucigalpa.jpg"
+}];
+
+export default Ember.Route.extend({
+  model() {
+    return rentals;
+  },
+});
+
+**ES6  syntax: model() is same as model: function().
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions link for ES6 syntax
+```
+## The model hook returns our hard-coded array of rentals.
+- This data is now available to the route's corresponding _index.hbs_ template as the _MODEL_ property. That is when we refer to the keyword _MODEL_ in the index.hbs, we're referring to this array of rentals from the index.js route handler
+
+- Model data in a route handler is available to the templates & components that correspond to that route.
+
+- The index.hbs template may now display our model data(an array of rentals) b/c this data is w/in its context. which is defined on its corresponding route handler.
+
+### Displaying Model Data
+- Now that our index.js route handler has access to our rental data w/in its model hook, we can display it in the route handler's corresponding index.hbs template.
+
+- **Note** We'll eventally display this info in components; not directly on the template. We'll refactor this code together in upcoming lessons when we learn about components.
+
+- But **For now** _we'll confirm our model hook is functioning by displaying our data in the index.hbs template._
+
+- We'll use another helper called {{each}}. This helper allows us to loop through each object in our model and display its information :
+
+```
+app/templates/index.hbs
+--------------------------------------
+<h1> Welcome to Super Rentals </h1>
+
+We hope you find exactly what you're looking for in a place to stay.
+
+<ul>
+  {{#each model as |rental|}}
+     <li>{{rental.owner}}'s {{rental.type}} in {{rental.city}}</li>
+  {{/each}}
+</ul>
+
+{{#link-to 'about'}}About{{/link-to}}
+{{#link-to 'contact'}}Click here to contact us.{{/link-to}}
+```
+- Here we create an unordered list. We loop through each object in the model hook defined in the index route handler, and call it _rental_. For each _rental_, we create a list item & display its owner, type & city properties.
+
+
+
+# Terminology:
+
+## Ember Data: It's responsible for dynamically managing models and creating, editing, and deleting instances of the model. _Meant to only work w/Ember_.
+
+## Firebase: Is a cloud database maintained by Google that stores information in JSON format. Visit Firebase's website for more details.(https://firebase.google.com/)
+
+## Add-On: Code that extends a framework's functionality but is not part of its core codebase.
+
+## Adapters: Code that connects an application to its data store.
+
+## Seeding: Pre-loading the database with hard-coded data.
+
+## JSON: Stands for _JavaScript Object Notation_ and is a standard format for communicating data between systems.
+
+## Tips
+- Generally speaking, your table names in **Firebase will be a _plural model name_, and the model hooks in your routes will refer to the _singular model name_.**
+
+# Ember Data & Firebase
+
+1. Generate our 1st Ember Data model: $ember g model rental
+   - This will create 2 files in our app
+      - A model file at _app/models/rental.js_  : The look of this may vary based on the version of Ember. _This file is essentially a 'blueprint' that lists the attributes each rental should contain._
+
+      - A test file
+
+```
+*vary depending on the Version.
+
+app/models/rental.js
+------------------------
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+
+});
+```
+
+2. _app/models/rental.js_ We'll use the same attributes we included in our hard-coded array of JS objects: owner, city, type, image, bedrooms.
+
+```
+app/models/rental.js
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+  owner: DS.attr(),
+  city: DS.attr(),
+  type: DS.attr(),
+  image: DS.attr(),
+  bedrooms: DS.attr()
+});
+
+** The DS = "data store", and .attr() = 'attribute'.
+Therefore a list of object attributes that we want to save to our data store for each rental we add.  
+```
+- When a DS.Model is exported, it's added to the data store. We'll connect a database to our app next.
+
+## USING FIREBASE W/ EMBER data
+- Ember Data library can be configured to save to any persistent data source.
+- We're going to use _Firebase database_ for our Ember applications.
+- _Firebase_ is a cloud database maintained by Google that stores information in JSON format.
+- Firebase's website: https://firebase.google.com/ & set up the account.
+
+## Installing  EmberFire
+
+- For Ember Data to communicate w/Firebase. by using _add-on_ called _EmberFire_ (a code that extends Ember functionality, but not part of the core Ember codebase.)
+
+- Install EmberFire from app directory: $ ember install emberfire
+
+- This automatically adds emberfire to package.json, firebase to bower.json, & create a new application adapter _app/adapters/application.js_
+
+- Adapters connect the applications to their data stores. The code in adapters/application.js creating an adapter specifically meant for connecting to Firebase. It uses Ember's Service Injection mechanism to inject (https://guides.emberjs.com/v2.3.0/applications/dependency-injection/it) into the application.
+
+## Configuring Firebase
+
+- To configure firebase URL & API to config/environment.js. Theadapter we just generated will handle connecting to Firebase.
+- Log into Firebase Account & creat a new project using the same project name as github repo.
+- Ember will use the info we add to ENV variable in config/environment.js to locate & communicate w/ our firebase application.
+- This is what we add to the ENV
+firebase: {
+      apiKey: 'YOUR-API-KEY-HERE',
+      authDomain: 'YOUR-FIREBASE-APP.firebaseapp.com',
+      databaseURL: 'https://YOUR-FIREBASE-APP.firebaseio.com',
+      storageBucket: 'YOUR-FIREBASE-APP.appspot.com'
+    },
+
+- get API key by click add firebase to ur web app on chrome. A modal will open that includes your all the required information.
+- Now restart your server for changes to register.    
+
+
+# Your Database name always be plural like rentals, students, etc.
+  - the JSON we uploaded to Firebase defines an array of objects labelled rentals (plural), whereas the model hook above instructs Ember to return each object of the type rental (singular).
+
+  1. Before we add data to our store through our Ember application, we can manually import the data from our hard-coded model hook directly into Firebase. This'll allow us to see what it looks like in Firebase, and understand how data arrives from Ember.
+
+  2. Pre-loading the database w/hard-coded data in this manner is known as **SEEDING** the database. Eventually we'll get rid of this pre-seeded data & instead allow users to create new rentals directly through the user interface of our application.
+
+  3. Create a temporary seed file called rentals.json in the root directory of our project. It can be put anywhere doesn't hv to be inside of the project .. just so to reference it in the firebase. This is not use by Ember. We created this file as a one-time thing simply to upload some hard-coded data to Firebase.
+  - JSON = "JS Object Notation" = std format for communicating data btwn systems.
+
+  ```
+  rentals.json
+  -------------------------------------
+{ "rentals": [{
+    "owner": "Veruca Salt",
+    "city": "San Francisco",
+    "type": "Estate",
+    "bedrooms": 15,
+    "image": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Crane_estate_(5).jpg"
+  }, {
+    "owner": "Mike Teavee",
+    "city": "Seattle",
+    "type": "Condo",
+    "bedrooms": 1,
+    "image": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Alfonso_13_Highrise_Tegucigalpa.jpg"
+  }, {
+    "owner": "Violet Beauregarde",
+    "city": "Portland",
+    "type": "Apartment",
+    "bedrooms": 3,
+    "image": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Wheeldon_Apartment_Building_-_Portland_Oregon.jpg"
+  }]
+}
+```
+
+  4. In firebase-database-data- import JSON: projects.json. Now we have original project-directory persisting in our Firebase application.
+
+##  Altering Firebase Permissions:
+- We'll need to let Firebase know that our application has Permission to write to our new database by click on RULES tab in firebase & update the JSON to read:
+
+```
+{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}
+```
+
+- This will allow any application w/our unique firebase URL to read & write to our database.
+
+## Updating the Model Hook
+
+To use our new data store in our application, we need to update the model hook in our route handler:
+
+```
+app/routes/index.js
+---------------------------------
+import Ember from 'ember';
+
+export default Ember.Route.extend({
+  model() {
+    return this.store.findAll('rental');
+    //rental in this need to be singular
+  },
+});
+```
+
+### Naming conventions
+- JSON we uploaded to Firebase defines an array of objects labelled rentals(plural), whereas the model hook above instructs Ember to return each project of the type rental(singular).
+
+- Ember & Firebase have built-in functionality to understand pluralization! It'll know the rentals table in firebase contains multiple "rental" Objs. **your table names in Firebase will be a plural model name, and the model hooks in your routes will refer to the singular model name.**
+
+### See Route diagram image/img-route.png
+
+## Adding a component
+- Add ability to hide & show img for each rental.
+- $ ember g component rental-tile
+- _component names should be **Kebab-case** (all lowercase separated by a dash)_ A dash is required in every component name to avoid possible of namiming conflicts w/HTML elements.
+- This will create app/components/rental-tile.js & app/templates/components/rental-til.hbs also installing & creates components-test
+
+- Component consist of 2 parts:
+    - A Handlebars template that defines the display (app/templates/components/rental-tile.hbs)
+
+    - A JavaScript source file that defines how it will behave (app/components/rental-tile.js).
+
+- despite they are in different locations, However they are like a 2 sided coin (2 sides of same component)
+
+- The rental-tile component will manage how a user sees & interacts w/ a rental, we'll move the contents of the {{#each}} loop on the index into the rental-tile template (rental-tile.hbs)   
+
+```
+app/templates/index.hbs
+<h1> Welcome to Super Rentals </h1>
+
+We hope you find exactly what you're looking for in a place to stay.
+
+<ul>
+  {{#each model as |rental|}}
+    {{rental-tile rental=rental}}
+  {{/each}}
+</ul>
+
+<!-- the same as
+<ul>
+  {{#each model as |rental-from-template|}}
+    {{rental-tile rental-in-component=rental-from-template}}
+  {{/each}}
+</ul> -->
+
+{{#link-to 'about'}}About{{/link-to}}
+{{#link-to 'contact'}}Click here to contact us.{{/link-to}}
+```
+
+### It's important to note that _components are completely isolated from their surroundings._ They _do not_ automatically _have access to models and other information_ within context of the route in which they are called. Anything a component needs from its surroundings must be passed in manually.
+
+### In this case we are passing the variaable rental to the component & assigning it the value of rental representing the individual rental obj. in the current iteration of the loop.
+- We're defining the variable rental used in the component's file as the model obj we're also referring to as rental during each iteration of the loop, as defined when we state {{#each model as |rental|}}
+- The rental on the left of the (=) refers to the variable name used w/in the component & the rental on the right refers to the model obj we're assigning this variable to.
+- _Note: Declaring "rental=rental" may seem unnecessarily redundant. But by using the same variable name in both the template and component we may consistently use "rental" to refer to the same data whether we're in the template or component files._
+- rental on the left of= always refers to the variable name used w/in the _component_ w/in its own template.
+- rental on the right refers to the obj we're assigning to that variable name _from the index template_
+
+- Add code to display rental details in our component
+
+```
+app/templates/components/rental-tile.hbs
+--------------------------------------------
+<li>
+  {{rental.owner}}'s {{rental.type}} in {{rental.city}}
+</li>
+```
+
+## Hiding & Showing an Image w/ the {{action}} helper
+
+
+
+
+
+# Ember also follows the paradigm "DATA DOWN, ACTIONS UP"
+
+- _Data_ must be passed downwards from the route, to the template, & into a component.
+
+- _Action_ must be passed up through each 'level' of the application in a similar fashion, but in the opposite direction
+    - Action move upwards from the component, to the template, into the route handler(routes/index.js). (from templates/components/rental-tile.hbs to templates/components/rental-tile.js to templates index.hbs to routes/index.js to model(firebase))
+
+
+# Update function
+  - run ember g update-rental
+
+  - created update-rental.hbs & update-rental.js
+
+  - add {{update-rental rental=rental update="update"}} in the rental-tile.hbs
+  *inorder to pass the rental object, and the update action we're about to create btwn the 2 components.*
+
+
+
+# Add Debugger from Ember Inspector in chrome extension
+  - set up Ember Inspector in Chrome or other web browser if use
+  - add debugger; to route/index.js under one of the method ... in this case ... we added below update()
+
+# Rental Route
+
+- First, we'll generate this new route:
+
+- $ ember g route rental
+- Similar to the routes we've previously generated, this command will create three files: One for the route handler (routes/rental.js), one for the template the route handler will render (templates/rental.hbs), and a test file. Additionally, the router (app/router.js) will automatically add an entry for the new route: this.route('rental').
+
+- However, we want our new rental route to display details for a single rental object. All previous routes we've constructed return all of an object.
+
+## Adding a Dynamic Segment
+In order to do this, we'll include a dynamic segment. A dynamic segment is simply a placeholder that may be dynamically updated depending on the circumstances (ie: which link we click to travel to this route). In our case, the dynamic segment we add to the rental route will represent the id of a given rental in Firebase. Including this specific information will allow us to return only a single rental in the route's model hook.
+
+We'll add this dynamic segment to our new route's entry in the router, like so:
+
+```
+app/router.js
+--------------------------
+import Ember from 'ember';
+import config from './config/environment';
+
+const Router = Ember.Router.extend({
+  location: config.locationType
+});
+
+Router.map(function() {
+  this.route('about');
+  this.route('contact');
+  this.route('rental', {path: '/rental/:rental_id'}); //add id ***
+});
+
+export default Router;
+```
+
+## Installing Bootstrap
+- Navigate to your project directory to install Bootstrap:
+
+- $ ember install ember-bootstrap
+- Once installed, you can peek into your bower.json and package.json files to see that Bootstrap has been added as a dependency to your application.
+
+
+## Using the Application Template
+
+- ember g template application
+
+- the application template can contain any HTML we want displayed on all pages of our application.
+
+- An unseen application route handler renders the application template. At the very least, your template should contain the following code:
+
+- app/templates/application.hbs
+{{outlet}}
+- As you can see, we have a single helper element: {{outlet}}. The URL translated by the router to the route handler determines the template that will populate {{outlet}}. As the URL changes, the template filling the {{outlet}} changes.
+
+- For example, when we request /index from our property rental application, the {{outlet}} is filled in with our app/templates/index.hbs template. When we click on "About", the app/templates/about.hbs template fills the {{outlet}}.
+
+- The application template is where headers, footers, nav bars and any other content that should be on every page of the application should go. Let's add a header, footer, and Bootstrap container to our application template:
+
+```
+app/templates/application.hbs
+--------------------------------
+<div class= "container">
+  <header class= "jumbotron">
+    <h1>Super Rentals</h1>
+  </header>
+    {{outlet}}
+  <hr>
+  <footer>
+    {{#link-to 'contact'}}Our representatives would love to help!{{/link-to}}
+  </footer>
+</div>
+```
+
+# Creating a Review Model
+
+- $ ember g model review
+
+```
+app/models/review.js
+--------------------------
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+  author: DS.attr(),
+  rating: DS.attr(),
+  content: DS.attr()
+});
+```
+- Returning Multiple Model Types in One Model Hook
+- However, in order to display both rentals and reviews on our index page, we will need to update the model hook on the index route handler to return two different types of objects:
+
+```
+app/routes/index.js
+-------------------------------
+...
+model() {
+  return Ember.RSVP.hash({
+    rentals: this.store.findAll('rental'),
+    reviews: this.store.findAll('review')
+  });
+  ...
+},
+```
+## Ember RSVP.Hash and JavaScript Promises
+- In order to do this, we need an Ember RSVP.hash. Ember RSVP.hash is a method included in Ember, built with the RSVP.js Library. It allows us to load multiple JavaScript promises at once. As we briefly discussed in previous weeks, a JavaScript promise is an operation that hasn't completed yet, but is expected to in the very near future. Here, reviews: this.store.findAll('review') and rentals: this.store.findAll('rental') are both promises. When Ember first loads your model hook, rentals and reviews are not instantly available. It has to reach out to Firebase and return them. This takes time. These statements are promises because they will not have completed when Ember first runs this code; it has to wait for these objects to return from Firebase.
+
+- A promise can be in one of three states: Pending, fulfilled, or rejected. When the code is first run, the promise is in the pending state. From here, it will either become fulfilled or rejected depending on whether it has successfully completed its goal. This is called resolving the promise.
+
+- Grouping multiple promises together in the RSVP.hash is beneficial because it merges multiple individual promises into one large promise. The RSVP.hash returns a new promise that is only fulfilled when all promises it contains are fulfilled. This prevents asynchronous timing issues in your application by prompting Ember to wait for all necessary objects before rendering your templates and components. Otherwise, it could begin rendering after rentals has been returned, but before reviews have been successfully fetched from the database.
+
+- For more information about how RSVP.hash works, visit the Ember Guides .
+
+## Accessing Model Data in an RSVP Hash
+
+
+## Ember Data has three relationship types
+- to help establish associations between models: One-to-one, one-to-many and many-to-many. In our property rental application we will create a one-to-many relationship between rentals and reviews: Rentals will have many reviews, and a review will belong to one rental.
+
+## Updating Models
+
+- We'll alter the rental model to contain many reviews by using the hasMany keyword:
+
+```
+app/models/rental.js
+-----------------------------
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+  owner: DS.attr(),
+  city: DS.attr(),
+  type: DS.attr(),
+  image: DS.attr(),
+  bedrooms: DS.attr(),
+  reviews: DS.hasMany('review', { async: true })
+});
+```
