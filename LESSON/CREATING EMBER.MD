@@ -19,6 +19,8 @@ Start project
 
 $ ember new project-name
 
+$ ember install ember-bootstrap
+
 - $ ember --help (commandname)
 ```
 
