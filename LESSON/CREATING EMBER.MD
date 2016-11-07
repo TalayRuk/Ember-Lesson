@@ -92,8 +92,95 @@ $ ember g route [name-of-route]
   26) add review to rental model
 
   27) run ember g component review-tile
+  
+  28) ember g helper rental-popularity  >using helper to rate popularity of the rental from its review
+  
+  29) ember g helper rental-cost  >add price to the rental
 
 
+```
+
+## How to do select option
+
+```
+<select onchange={{action "topicDidChange" value="target.value"}}>
+
+  <option value=''>select the Topic</option>
+
+  {{#each topics as |topic|}}
+    <option value={{topic.subject}}>
+      {{topic.subject}}
+    </option>
+  {{/each}}
+</select>
+
+
+actions-up
+actions: {
+  topicDidChange(value) {
+    this.set('selectedTopicSubject', value);
+  }
+};
+
+selectedTopicSubject: null
+
+Data-down
+//right under <option value=
+selected={{is-equal topic selectedTopic}}
+//is equal helper .. ask if the topic selected is equal topic that we are passing in .. this will return boolean
+
+ACTION-UP CLOSURE ACTION
+components/fruit-select.hbs
+<selec onchange={{action onchange value='target.value'}}>
+
+components/fruit-select.js
+actions: {
+
+}
+
+components/grocery-order-form.hbs
+{{fruit-select onchange=onchange}}
+
+templates/some-route.hbs
+{{grocery-order-form onchange={{action 'udateFruit'}}
+
+route handler.js
+actions: {
+  updateFruit(fruit) {
+
+  }
+}
+
+DATA down
+
+components /fruit-select.hbs
+
+{{#each fruits as |fruit|}}
+  {{fruit-select-option
+    fruit=fruit
+    disabledKey=diabledKey //when don't want certain one to be selected
+    selectedFruit=selectedFruit}}
+{{/each}}
+
+INSTEAD we can do this with
+using {{GET}} HELPER - make it easier to use
+
+//components /fruit-select.hbs
+{#each fruits as |fruit|}}
+  <option  
+  disabled={{get fruit disabledKey}}
+  selected={{os-equal fruit selectedFruit}}
+  value={{fruit.id}}>
+  {{fruit.name}}
+  </option>
+{{/each}}
+
+//components/grocery-order-form.hbs
+{{fruit-select 
+  onchange=(action 'updateFruit')
+  fruits=fruits
+  selectedFruit=selectedFruit
+  disabledKey='isRed'}}
 
 ```
 
