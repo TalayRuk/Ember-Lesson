@@ -78,6 +78,22 @@ $ ember g route [name-of-route]
   19) run ember g component rental-detail
 
   20) run ember install ember-bootstrap
+  
+    - run ember install ember-bootstrap nav
+      To use this addon, create a bs-navbar component with your project links and need to have route for that link:
+      See Example in Messageboard
+        {{#bs-navbar class='navbar-default navbar-fixed-top' name='Ember Bootstrap'}}
+          {{!-- This nested link to allows the active state to work on your menu items --}}
+          {{#link-to 'navbar' tagName='li'}}
+            {{link-to 'Navbar' 'navbar'}}
+          {{/link-to}}
+        {{/bs-navbar}}
+      The name property allows you specify the name that is used for you app and placed in the .navbar-brand link in your navbar.
+      Customization
+      You can customize your navbar a bit more with the following properties on your bs-navbar:
+
+      homeRoute - Allows you to specify what route to link to when a user clicks on your logo/brand name.
+      logoImg - Allows you to specify an image to use in your .navbar-brand instead of plain text
 
   21) run ember g template application
 
@@ -96,6 +112,11 @@ $ ember g route [name-of-route]
   28) ember g helper rental-popularity  >using helper to rate popularity of the rental from its review
   
   29) ember g helper rental-cost  >add price to the rental
+  
+  ****
+  30) To REMOVE unwanted route or anything that just create use 
+    
+    - ember destroy   
 
 
 ```
