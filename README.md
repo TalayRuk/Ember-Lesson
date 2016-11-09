@@ -117,7 +117,12 @@ $ ember g route [name-of-route]
   ****
   30) To REMOVE unwanted route or anything that just create use 
     
-    - ember destroy   
+    - ember destroy 
+    
+  ******
+  31) CREATE a Child route (product) nested in the PARENT route (store)
+  
+    - ember g route store/product
 
 
 ```
